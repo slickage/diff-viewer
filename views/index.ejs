@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+<head>
+  <title>EpochTalk DiffViewer</title>
+
+</head>
+<body>
+  <%- latestPost %><br /><br />
+<hr />
+
+<div style="font-family: monospace" id="display"></div>
+
+<script src="/js/diff.js"></script>
+<script>
+  var postHistory = <%- JSON.stringify(postHistory) %>;
+  var latestPost = <%- JSON.stringify(latestPost) %>;
+  postHistory.forEach(function(post) {
+    var diff = JsDiff.diffWords(post, latestPost);
+      diff.forEach(function(part){
+      // green for additions, red for deletions
+      // grey for common parts
+      var color = part.added ? 'green' :
+        part.removed ? 'red' : 'grey';
+      var span = document.createElement('span');
+      span.style.color = color;
+      if (part.removed) {
+        span.style.textDecoration = 'line-through';
+      }
+      span.appendChild(document.createTextNode(part.value));
+      document.getElementById('display').appendChild(span);
+    });
+    document.getElementById('display').appendChild(document.createElement('br'));
+    document.getElementById('display').appendChild(document.createElement('br'));
+  });
+</script>
+</body>
+</html>
